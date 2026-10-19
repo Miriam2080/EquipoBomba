@@ -27,6 +27,8 @@ import kotlinx.coroutines.delay
 private val Azul = Color(0xFF0A66C2)
 private val Fondo = Color(0xFFF5F7FA)
 
+
+
 @Composable
 fun App(
     fotoPerfil: ImageBitmap? = null,
@@ -43,24 +45,54 @@ fun App(
 
     MaterialTheme {
         when (pantalla) {
+
             "splash" -> SplashScreen()
 
             "login" -> LoginScreen(
                 onVerPresentacion = {
-                    pantalla = "perfil"
+                    pantalla = "menu"
                 }
             )
 
-            "perfil" -> PerfilScreen(
-                fotoPerfil = fotoPerfil,
-                onSeleccionarFoto = onSeleccionarFoto,
-                onVolver = {
+            "menu" -> MenuPrincipalScreen(
+                onAcercaDe = {
+                    pantalla = "acerca"
+                },
+                onSalir = {
                     pantalla = "login"
                 }
+            )
+
+            "acerca" -> AcercaDeScreen(
+                onMiriam = { pantalla = "miriam" },
+                onSherlyn = { pantalla = "sherlyn" },
+                onJoan = { pantalla = "joan" },
+                onAlfredo = { pantalla = "alfredo" },
+                onVolver = { pantalla = "menu" }
+            )
+
+            "miriam" -> PerfilMiriamScreen(
+                fotoPerfil = fotoPerfil,
+                onSeleccionarFoto = onSeleccionarFoto,
+                onVolver = { pantalla = "acerca" }
+            )
+
+            "sherlyn" -> PerfilSherlynScreen(
+                onVolver = { pantalla = "acerca" }
+            )
+
+            "joan" -> PerfilJoanScreen(
+                onVolver = { pantalla = "acerca" }
+            )
+
+            "alfredo" -> PerfilAlfredoScreen(
+                onVolver = { pantalla = "acerca" }
             )
         }
     }
 }
+
+
 
 @Composable
 fun SplashScreen() {
@@ -342,6 +374,70 @@ fun DatoPresentacion(
                 text = contenido,
                 fontSize = 16.sp,
                 color = Color.DarkGray
+            )
+        }
+    }
+}
+
+@Composable
+fun MenuPrincipalScreen(
+    onAcercaDe: () -> Unit,
+    onSalir: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Fondo)
+            .safeContentPadding()
+            .padding(24.dp),
+
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Text(
+            text = "EQUIPO BOMBA",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            color = Azul
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text(
+            text = "Bienvenido a nuestra aplicación",
+            fontSize = 19.sp,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(45.dp))
+
+        Button(
+            onClick = onAcercaDe,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(55.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Azul
+            )
+        ) {
+            Text(
+                text = "Acerca de nosotros",
+                fontSize = 17.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        OutlinedButton(
+            onClick = onSalir,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(55.dp)
+        ) {
+            Text(
+                text = "Salir",
+                fontSize = 17.sp
             )
         }
     }
