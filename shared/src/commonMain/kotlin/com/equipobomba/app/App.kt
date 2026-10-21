@@ -1,4 +1,3 @@
-
 package com.equipobomba.app
 
 import androidx.compose.animation.core.animateFloatAsState
@@ -32,43 +31,67 @@ private val Fondo = Color(0xFFF5F7FA)
 @Composable
 fun App(
     fotoPerfil: ImageBitmap? = null,
-    onSeleccionarFoto: () -> Unit = {}
+    onSeleccionarFoto: () -> Unit = {},
+    onIniciarLinkedIn: () -> Unit = {},
+    sesionValida: Boolean = false,
+    onCerrarSesion: () -> Unit = {},
+    logoEquipoBomba: ImageBitmap? = null
 ) {
+
+
+
     var pantalla by remember {
         mutableStateOf("splash")
     }
 
+
     LaunchedEffect(Unit) {
         delay(3000)
-        pantalla = "login"
+
+        if (pantalla == "splash") {
+            pantalla = "login"
+        }
     }
+
+    LaunchedEffect(sesionValida) {
+        if (sesionValida) {
+            pantalla = "menu"
+        }
+    }
+
 
     MaterialTheme {
         when (pantalla) {
 
             "splash" -> SplashScreen()
-
             "login" -> LoginScreen(
-                onVerPresentacion = {
-                    pantalla = "menu"
-                }
+                logoEquipoBomba = logoEquipoBomba,
+
+                onIniciarLinkedIn = onIniciarLinkedIn
             )
 
+
             "menu" -> MenuPrincipalScreen(
+                logoEquipoBomba = logoEquipoBomba,
+
                 onAcercaDe = {
                     pantalla = "acerca"
                 },
                 onSalir = {
+                    onCerrarSesion()
                     pantalla = "login"
                 }
             )
+
 
             "acerca" -> AcercaDeScreen(
                 onMiriam = { pantalla = "miriam" },
                 onSherlyn = { pantalla = "sherlyn" },
                 onJoan = { pantalla = "joan" },
                 onAlfredo = { pantalla = "alfredo" },
-                onVolver = { pantalla = "menu" }
+                onVolver = {
+                    pantalla = if (sesionValida) "menu" else "login"
+                }
             )
 
             "miriam" -> PerfilMiriamScreen(
@@ -85,9 +108,8 @@ fun App(
                 onVolver = { pantalla = "acerca" }
             )
 
-            "alfredo" -> PerfilAlfredoScreen(
-                onVolver = { pantalla = "acerca" }
-            )
+            "alfredo" -> PerfilAlfredoScreen()
+
         }
     }
 }
@@ -150,10 +172,10 @@ fun SplashScreen() {
 }
 
 @Composable
-fun LoginScreen(onVerPresentacion: () -> Unit) {
-    var mensaje by remember {
-        mutableStateOf("")
-    }
+fun LoginScreen(
+    onIniciarLinkedIn: () -> Unit,
+    logoEquipoBomba: ImageBitmap? = null
+) {
 
     Column(
         modifier = Modifier
@@ -164,6 +186,18 @@ fun LoginScreen(onVerPresentacion: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Logotipo oficial de EquipoBomba, cargado desde Android.
+        if (logoEquipoBomba != null) {
+            Image(
+                bitmap = logoEquipoBomba,
+                contentDescription = "Logotipo de EquipoBomba",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(150.dp)
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+        }
+
         Text(
             text = "EQUIPO BOMBA",
             fontSize = 30.sp,
@@ -189,10 +223,9 @@ fun LoginScreen(onVerPresentacion: () -> Unit) {
 
         Spacer(modifier = Modifier.height(35.dp))
 
+
         Button(
-            onClick = {
-                mensaje = "Autenticación con LinkedIn pendiente"
-            },
+            onClick = onIniciarLinkedIn,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(55.dp),
@@ -201,26 +234,6 @@ fun LoginScreen(onVerPresentacion: () -> Unit) {
             )
         ) {
             Text("Continuar con LinkedIn")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedButton(
-            onClick = onVerPresentacion,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Ver mi presentación")
-        }
-
-        if (mensaje.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(15.dp))
-
-            Text(
-                text = mensaje,
-                fontSize = 14.sp,
-                color = Color.DarkGray,
-                textAlign = TextAlign.Center
-            )
         }
     }
 }
@@ -382,7 +395,8 @@ fun DatoPresentacion(
 @Composable
 fun MenuPrincipalScreen(
     onAcercaDe: () -> Unit,
-    onSalir: () -> Unit
+    onSalir: () -> Unit,
+    logoEquipoBomba: ImageBitmap? = null
 ) {
     Column(
         modifier = Modifier
@@ -394,6 +408,18 @@ fun MenuPrincipalScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
+        // Logotipo oficial de EquipoBomba, cargado desde Android.
+        if (logoEquipoBomba != null) {
+            Image(
+                bitmap = logoEquipoBomba,
+                contentDescription = "Logotipo de EquipoBomba",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(150.dp)
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+        }
 
         Text(
             text = "EQUIPO BOMBA",
