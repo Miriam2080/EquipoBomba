@@ -95,6 +95,117 @@ class MainActivity : ComponentActivity() {
             }
 
 
+// Fotografia independiente de Alfredo
+            val archivoFotoAlfredo = File(filesDir, "foto_alfredo")
+
+            var fotoAlfredo by remember {
+                mutableStateOf(
+                    runCatching {
+                        if (archivoFotoAlfredo.exists()) {
+                            BitmapFactory.decodeFile(
+                                archivoFotoAlfredo.absolutePath
+                            )?.asImageBitmap()
+                        } else {
+                            null
+                        }
+                    }.getOrNull()
+                )
+            }
+
+// Selector exclusivo de Alfredo
+            val selectorFotoAlfredo = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.GetContent()
+            ) { uri ->
+
+                if (uri != null) {
+                    val imagen = runCatching {
+
+                        contentResolver.openInputStream(uri)?.use { entrada ->
+                            archivoFotoAlfredo.outputStream().use { salida ->
+                                entrada.copyTo(salida)
+                            }
+                        } ?: error("No se pudo abrir la fotografía")
+
+                        BitmapFactory.decodeFile(
+                            archivoFotoAlfredo.absolutePath
+                        )?.asImageBitmap()
+                            ?: error("No se pudo cargar la fotografía")
+
+                    }.getOrNull()
+
+                    if (imagen != null) {
+                        fotoAlfredo = imagen
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "No fue posible guardar la foto de Alfredo",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+
+// ==========================================
+// FOTOGRAFIA INDEPENDIENTE DE SHERLYN
+// ==========================================
+
+            val archivoFotoSherlyn = File(
+                filesDir,
+                "foto_sherlyn"
+            )
+
+// Cargar la foto guardada al abrir EquipoBomba
+            var fotoSherlyn by remember {
+                mutableStateOf(
+                    runCatching {
+                        if (archivoFotoSherlyn.exists()) {
+                            BitmapFactory.decodeFile(
+                                archivoFotoSherlyn.absolutePath
+                            )?.asImageBitmap()
+                        } else {
+                            null
+                        }
+                    }.getOrNull()
+                )
+            }
+
+// Selector exclusivo de Sherlyn
+            val selectorFotoSherlyn = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.GetContent()
+            ) { uri ->
+
+                if (uri != null) {
+
+                    val imagen = runCatching {
+
+                        contentResolver.openInputStream(uri)?.use { entrada ->
+                            archivoFotoSherlyn.outputStream().use { salida ->
+                                entrada.copyTo(salida)
+                            }
+                        } ?: error("No se pudo abrir la fotografía")
+
+                        BitmapFactory.decodeFile(
+                            archivoFotoSherlyn.absolutePath
+                        )?.asImageBitmap()
+                            ?: error("No se pudo cargar la fotografía")
+
+                    }.getOrNull()
+
+                    if (imagen != null) {
+                        fotoSherlyn = imagen
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "No fue posible guardar la foto de Sherlyn",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+
+
+
+
             // Token propio de EquipoBomba.
             // Se mantiene solo en memoria durante esta prueba.
             var tokenSesion by remember {
@@ -221,34 +332,57 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            App(
 
+            App(
                 logoEquipoBomba = logoEquipoBomba,
 
+                // Fotografia de Miriam
                 fotoPerfil = foto,
 
                 onSeleccionarFoto = {
                     selectorFoto.launch("image/*")
                 },
 
+                // Fotografia independiente de Alfredo y sherlyn
+                fotoAlfredo = fotoAlfredo,
+
+                onSeleccionarFotoAlfredo = {
+                    selectorFotoAlfredo.launch("image/*")
+                },
+
+                fotoSherlyn = fotoSherlyn,
+
+                onSeleccionarFotoSherlyn = {
+                    selectorFotoSherlyn.launch("image/*")
+                },
+
+                // Inicio de sesion con LinkedIn
                 onIniciarLinkedIn = {
                     iniciarLinkedIn()
                 },
 
+                // Comprobar si existe una sesion
                 sesionValida = tokenSesion != null,
 
+                // Cerrar sesion correctamente
                 onCerrarSesion = {
+
                     val tokenAnterior = tokenSesion
 
-                    // Cerrar inmediatamente la sesion local.
+                    // Cerrar inmediatamente la sesion local
                     tokenSesion = null
 
                     if (tokenAnterior != null) {
+
                         scope.launch {
+
                             withContext(Dispatchers.IO) {
+
                                 try {
                                     cerrarSesionBackend(tokenAnterior)
+
                                 } catch (error: Exception) {
+
                                     Log.w(
                                         "EquipoBombaAuth",
                                         "No se pudo cerrar sesion en Ktor",
@@ -260,6 +394,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             )
+
         }
     }
 
