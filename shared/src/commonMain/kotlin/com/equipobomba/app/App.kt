@@ -88,7 +88,7 @@ fun App(
                 onMiriam = { pantalla = "miriam" },
                 onSherlyn = { pantalla = "sherlyn" },
                 onJoan = { pantalla = "joan" },
-                onAlfredo = { pantalla = "alfredo" },
+                onAlfredo = { pantalla = "Alfredo" },
                 onVolver = {
                     pantalla = if (sesionValida) "menu" else "login"
                 }
@@ -108,7 +108,11 @@ fun App(
                 onVolver = { pantalla = "acerca" }
             )
 
-            "alfredo" -> PerfilAlfredoScreen()
+            "alfredo" -> PerfilAlfredoScreen(
+                fotoPerfil = fotoPerfil,
+                onSeleccionarFoto = onSeleccionarFoto,
+                onVolver = { pantalla = "acerca" }
+            )
 
         }
     }
