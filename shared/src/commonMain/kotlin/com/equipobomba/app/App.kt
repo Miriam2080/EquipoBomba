@@ -29,14 +29,23 @@ private val Fondo = Color(0xFFF5F7FA)
 
 
 @Composable
+
 fun App(
+
     fotoPerfil: ImageBitmap? = null,
     onSeleccionarFoto: () -> Unit = {},
     onIniciarLinkedIn: () -> Unit = {},
     sesionValida: Boolean = false,
     onCerrarSesion: () -> Unit = {},
-    logoEquipoBomba: ImageBitmap? = null
+    logoEquipoBomba: ImageBitmap? = null,
+    fotoAlfredo: ImageBitmap? = null,
+    onSeleccionarFotoAlfredo: () -> Unit = {},
+    fotoSherlyn: ImageBitmap? = null,
+    onSeleccionarFotoSherlyn: () -> Unit = {}
+
 ) {
+
+
 
 
 
@@ -88,7 +97,7 @@ fun App(
                 onMiriam = { pantalla = "miriam" },
                 onSherlyn = { pantalla = "sherlyn" },
                 onJoan = { pantalla = "joan" },
-                onAlfredo = { pantalla = "Alfredo" },
+                onAlfredo = { pantalla = "alfredo" },
                 onVolver = {
                     pantalla = if (sesionValida) "menu" else "login"
                 }
@@ -100,17 +109,23 @@ fun App(
                 onVolver = { pantalla = "acerca" }
             )
 
+
             "sherlyn" -> PerfilSherlynScreen(
-                onVolver = { pantalla = "acerca" }
+                fotoPerfil = fotoSherlyn,
+                onSeleccionarFoto = onSeleccionarFotoSherlyn,
+                onVolver = {
+                    pantalla = "acerca"
+                }
             )
+
 
             "joan" -> PerfilJoanScreen(
                 onVolver = { pantalla = "acerca" }
             )
 
             "alfredo" -> PerfilAlfredoScreen(
-                fotoPerfil = fotoPerfil,
-                onSeleccionarFoto = onSeleccionarFoto,
+                fotoPerfil = fotoAlfredo,
+                onSeleccionarFoto = onSeleccionarFotoAlfredo,
                 onVolver = { pantalla = "acerca" }
             )
 

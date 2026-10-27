@@ -28,6 +28,9 @@ fun PerfilMiriamScreen(
 ) {
     val azul = Color(0xFF0A66C2)
 
+    // Nuevo fondo azul oceano pastel
+    val fondoOceano = Color(0xFFDDF3FA)
+
     // Datos fijos de Miriam
     val nombre = "Miriam Janneth Gómez Aguilar"
     val carrera = "Ingeniería en Desarrollo y Gestión de Software"
@@ -39,12 +42,13 @@ fun PerfilMiriamScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F7FA))
+            .background(fondoOceano)
             .safeContentPadding()
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(
             text = "MI PERFIL",
             fontSize = 28.sp,

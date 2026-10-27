@@ -1,6 +1,7 @@
 
 package com.equipobomba.app
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,7 +28,9 @@ private val Fondo = Color(0xFFF2F6FC)
 
 @Composable
 fun PerfilSherlynScreen(
-    onVolver: () -> Unit
+    onVolver: () -> Unit,
+    fotoPerfil: ImageBitmap? = null,
+    onSeleccionarFoto: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -57,20 +62,31 @@ fun PerfilSherlynScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Avatar
-            Box(
-                modifier = Modifier
-                    .size(115.dp)
-                    .clip(CircleShape)
-                    .background(Color.White),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "SG",
-                    fontSize = 42.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = AzulOscuro
+            // FOTO DE PERFIL DE SHERLYN
+            if (fotoPerfil != null) {
+                Image(
+                    bitmap = fotoPerfil,
+                    contentDescription = "Foto de Sherlyn",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(115.dp)
+                        .clip(CircleShape)
                 )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(115.dp)
+                        .clip(CircleShape)
+                        .background(Color.White),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "SG",
+                        fontSize = 42.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AzulOscuro
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(18.dp))
@@ -90,6 +106,27 @@ fun PerfilSherlynScreen(
                 fontSize = 15.sp,
                 color = Color(0xFFE3F2FD)
             )
+
+            // NUEVO BOTON PARA SELECCIONAR FOTOGRAFIA
+            Spacer(modifier = Modifier.height(18.dp))
+
+            Button(
+                onClick = onSeleccionarFoto,
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = AzulOscuro
+                )
+            ) {
+                Text(
+                    text = if (fotoPerfil == null) {
+                        "Seleccionar mi foto"
+                    } else {
+                        "Cambiar mi foto"
+                    },
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(25.dp))

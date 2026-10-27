@@ -3,15 +3,18 @@ package com.equipobomba.app
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -20,95 +23,193 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+private val MoradoOscuroAlf = Color(0xFF251247)
+private val MoradoAlf = Color(0xFF6D28D9)
+private val LilaAlf = Color(0xFFEDE9FE)
+private val FondoAlf = Color(0xFFF7F5FC)
+
 @Composable
 fun PerfilAlfredoScreen(
     fotoPerfil: ImageBitmap?,
     onSeleccionarFoto: () -> Unit,
     onVolver: () -> Unit
 ) {
-    val azul = Color(0xFF0A66C2)
-
-    // Datos fijos de Alfredo
-    val nombre = "Alfredo Ton Gómez"
-    val carrera = "Ingeniería en Desarrollo y Gestión de Software"
-    val materia = "Integración de aplicaciones móviles con servicios en la nube"
-    val descripcion = "Soy estudiante de Ingeniería en Desarrollo " +
-            "y Gestión de Software. Me interesa el desarrollo " +
-            "de aplicaciones móviles, Machine learning, Desarrollo web, etc."
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F7FA))
+            .background(FondoAlf)
             .safeContentPadding()
             .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "MI PERFIL",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = azul
-        )
 
-        Spacer(Modifier.height(24.dp))
+        // ENCABEZADO MORADO
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(MoradoOscuroAlf, MoradoAlf)
+                    ),
+                    shape = RoundedCornerShape(
+                        bottomStart = 30.dp,
+                        bottomEnd = 30.dp
+                    )
+                )
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        if (fotoPerfil != null) {
-            Image(
-                bitmap = fotoPerfil,
-                contentDescription = "Foto de Alfredo",
-                modifier = Modifier
-                    .size(160.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
+            Text(
+                text = "EQUIPOBOMBA",
+                color = Color(0xFFDDD6FE),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 2.sp
             )
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(160.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFDCEAF9)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Sin foto", color = azul)
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "PERFIL DE ALFREDO",
+                color = Color.White,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // FOTO EXCLUSIVA DE ALFREDO
+            if (fotoPerfil != null) {
+                Image(
+                    bitmap = fotoPerfil,
+                    contentDescription = "Fotografía de Alfredo",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(145.dp)
+                        .border(4.dp, Color.White, CircleShape)
+                        .clip(CircleShape)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(145.dp)
+                        .border(4.dp, Color.White, CircleShape)
+                        .clip(CircleShape)
+                        .background(LilaAlf),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "AT",
+                        color = MoradoAlf,
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
-        }
 
-        Spacer(Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-        Button(
-            onClick = onSeleccionarFoto,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = azul
+            Text(
+                text = "Alfredo Ton Gómez",
+                color = Color.White,
+                fontSize = 23.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
-        ) {
-            Text("Seleccionar mi foto")
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Text(
+                text = "Estudiante de Ingeniería de Software",
+                color = Color(0xFFE9D5FF),
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center
+            )
         }
 
-        Spacer(Modifier.height(24.dp))
-
-        DatoAlfredo("Nombre completo", nombre)
-
-        DatoAlfredo("Carrera", carrera)
-
-        DatoAlfredo("Materia", materia)
-
-        DatoAlfredo("Sobre mí", descripcion)
-
-        Spacer(Modifier.height(16.dp))
-
-        OutlinedButton(
-            onClick = onVolver,
-            modifier = Modifier.fillMaxWidth()
+        // CONTENIDO DEL PERFIL
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Regresar a Acerca de nosotros")
+
+            Button(
+                onClick = onSeleccionarFoto,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(15.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MoradoAlf
+                )
+            ) {
+                Text(
+                    text = "Cambiar mi fotografía",
+                    modifier = Modifier.padding(5.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "INFORMACIÓN PERSONAL",
+                color = MoradoOscuroAlf,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            DatoAlfredoNuevo(
+                titulo = "Nombre completo",
+                contenido = "Alfredo Ton Gómez"
+            )
+
+            DatoAlfredoNuevo(
+                titulo = "Carrera",
+                contenido = "Ingeniería en Desarrollo y Gestión de Software"
+            )
+
+            DatoAlfredoNuevo(
+                titulo = "Materia",
+                contenido = "Integración de aplicaciones móviles " +
+                        "con servicios en la nube"
+            )
+
+            DatoAlfredoNuevo(
+                titulo = "Sobre mí",
+                contenido = "Soy estudiante de Ingeniería en Desarrollo " +
+                        "y Gestión de Software. Me interesa el desarrollo " +
+                        "de aplicaciones móviles, Machine Learning y " +
+                        "desarrollo web."
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedButton(
+                onClick = onVolver,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(15.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MoradoAlf
+                )
+            ) {
+                Text(
+                    text = "Regresar a Acerca de nosotros",
+                    fontSize = 14.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-private fun DatoAlfredo(
+private fun DatoAlfredoNuevo(
     titulo: String,
     contenido: String
 ) {
@@ -116,24 +217,31 @@ private fun DatoAlfredo(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp),
+        shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
         )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier.padding(18.dp)
+        ) {
             Text(
                 text = titulo,
-                fontSize = 14.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF0A66C2)
+                color = MoradoAlf
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = contenido,
-                fontSize = 16.sp,
-                color = Color.DarkGray
+                fontSize = 15.sp,
+                color = MoradoOscuroAlf,
+                lineHeight = 22.sp
             )
         }
     }
