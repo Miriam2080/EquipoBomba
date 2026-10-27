@@ -41,13 +41,13 @@ fun App(
     fotoAlfredo: ImageBitmap? = null,
     onSeleccionarFotoAlfredo: () -> Unit = {},
     fotoSherlyn: ImageBitmap? = null,
-    onSeleccionarFotoSherlyn: () -> Unit = {}
+    onSeleccionarFotoSherlyn: () -> Unit = {},
+
+    fotoJoan: ImageBitmap? = null,
+    onSeleccionarFotoJoan: () -> Unit = {}
+
 
 ) {
-
-
-
-
 
     var pantalla by remember {
         mutableStateOf("splash")
@@ -119,9 +119,15 @@ fun App(
             )
 
 
+
             "joan" -> PerfilJoanScreen(
-                onVolver = { pantalla = "acerca" }
+                fotoPerfil = fotoJoan,
+                onSeleccionarFoto = onSeleccionarFotoJoan,
+                onVolver = {
+                    pantalla = "acerca"
+                }
             )
+
 
             "alfredo" -> PerfilAlfredoScreen(
                 fotoPerfil = fotoAlfredo,

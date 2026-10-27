@@ -95,6 +95,69 @@ class MainActivity : ComponentActivity() {
             }
 
 
+// ========================================
+// FOTO INDEPENDIENTE DE JOAN
+// ========================================
+
+            val archivoFotoJoan = File(
+                filesDir,
+                "foto_joan"
+            )
+
+// Cargar fotografia guardada
+            var fotoJoan by remember {
+                mutableStateOf(
+                    runCatching {
+                        if (archivoFotoJoan.exists()) {
+                            BitmapFactory.decodeFile(
+                                archivoFotoJoan.absolutePath
+                            )?.asImageBitmap()
+                        } else {
+                            null
+                        }
+                    }.getOrNull()
+                )
+            }
+
+// Abrir galeria y seleccionar foto
+            val selectorFotoJoan = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.GetContent()
+            ) { uri ->
+
+                if (uri != null) {
+
+                    val imagen = runCatching {
+
+                        contentResolver.openInputStream(uri)?.use { entrada ->
+                            archivoFotoJoan.outputStream().use { salida ->
+                                entrada.copyTo(salida)
+                            }
+                        } ?: error("No se pudo abrir la fotografia")
+
+                        BitmapFactory.decodeFile(
+                            archivoFotoJoan.absolutePath
+                        )?.asImageBitmap()
+                            ?: error("No se pudo cargar la fotografia")
+
+                    }.getOrNull()
+
+                    if (imagen != null) {
+
+                        fotoJoan = imagen
+
+                    } else {
+
+                        Toast.makeText(
+                            this@MainActivity,
+                            "No fue posible guardar la foto de Joan",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+
+
+
 // Fotografia independiente de Alfredo
             val archivoFotoAlfredo = File(filesDir, "foto_alfredo")
 
@@ -355,6 +418,13 @@ class MainActivity : ComponentActivity() {
                 onSeleccionarFotoSherlyn = {
                     selectorFotoSherlyn.launch("image/*")
                 },
+
+                fotoJoan = fotoJoan,
+
+                onSeleccionarFotoJoan = {
+                    selectorFotoJoan.launch("image/*")
+                },
+
 
                 // Inicio de sesion con LinkedIn
                 onIniciarLinkedIn = {
